@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="jakarta.faces.html">
+    <h:head>
+        <title>À propos</title>
+        <!-- TailwindCSS CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    </h:head>
+    <h:body>
+        <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-300 p-6">
+            <div class="bg-white rounded-2xl shadow-2xl p-10 max-w-2xl w-full relative animate-fade-in">
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Indonésie" class="w-full h-48 object-cover rounded-xl mb-6 shadow-lg border-4 border-indigo-200"/>
+                <h1 class="text-4xl font-extrabold text-indigo-700 mb-4 drop-shadow">À propos du projet</h1>
+                <p class="text-gray-700 mb-6 text-lg">Ce site est une démonstration d'une application <span class="font-semibold text-indigo-600">Jakarta EE</span> pour la gestion de lieux en Indonésie. Il permet d'ajouter des lieux, de consulter des informations et de découvrir le pays.</p>
+                <ul class="list-disc list-inside text-gray-600 mb-6 text-base">
+                    <li><span class="font-bold text-indigo-500">Projet réalisé par :</span> LENOVO</li>
+                    <li><span class="font-bold text-indigo-500">Technologies :</span> Jakarta EE, Java, JSF, TailwindCSS</li>
+                    <li><span class="font-bold text-indigo-500">Objectif :</span> Découverte et gestion de lieux touristiques</li>
+                </ul>
+                <div class="mt-8 flex items-center justify-between">
+                    <div>
+                        <span class="font-semibold text-indigo-600">Contact :</span>
+                        <a href="mailto:contact@indonesie.com" class="text-blue-500 underline ml-2">contact@indonesie.com</a>
+                    </div>
+                    <div class="flex gap-2">
+                        <a href="https://github.com/" target="_blank" class="text-gray-400 hover:text-indigo-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" /></svg></a>
+                        <a href="https://linkedin.com/" target="_blank" class="text-gray-400 hover:text-indigo-600"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8a6 6 0 01-12 0" /></svg></a>
+                    </div>
+                </div>
+            </div>
+            <footer class="mt-8 text-center text-gray-500 text-sm">
+                &copy; 2025 Indonésie Explorer. Tous droits réservés.
+            </footer>
+        </div>
+        <style>
+            @keyframes fade-in {
+                from { opacity: 0; transform: translateY(30px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .animate-fade-in {
+                animation: fade-in 1s ease;
+            }
+        </style>
+    </h:body>
+</html>
