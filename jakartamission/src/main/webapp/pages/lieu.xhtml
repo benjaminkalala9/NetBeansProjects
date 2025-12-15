@@ -1,7 +1,9 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="jakarta.faces.html">
+    xmlns:h="jakarta.faces.html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
     <h:head>
         <title>Ajouter un lieu</title>
         <!-- TailwindCSS CDN -->
@@ -16,25 +18,72 @@
                     <div class="grid grid-cols-1 gap-4">
                         <div>
                             <label for="nomLieu" class="block text-gray-700 font-semibold mb-1">Nom :</label>
-                            <h:inputText id="nomLieu" value="#{lieuBean.nom}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                            <h:inputText id="nomLieu" value="#{lieuBean.nom}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: Borobudur"/>
                         </div>
                         <div>
                             <label for="descLieu" class="block text-gray-700 font-semibold mb-1">Description :</label>
-                            <h:inputText id="descLieu" value="#{lieuBean.description}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                            <h:inputText id="descLieu" value="#{lieuBean.description}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: Temple bouddhiste célèbre, patrimoine mondial"/>
                         </div>
-                        <div>
-                            <label for="latLieu" class="block text-gray-700 font-semibold mb-1">Latitude :</label>
-                            <h:inputText id="latLieu" value="#{lieuBean.latitude}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"/>
-                        </div>
-                        <div>
-                            <label for="longLieu" class="block text-gray-700 font-semibold mb-1">Longitude :</label>
-                            <h:inputText id="longLieu" value="#{lieuBean.longitude}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="latLieu" class="block text-gray-700 font-semibold mb-1">Latitude :</label>
+                                <h:inputText id="latLieu" value="#{lieuBean.latitude}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: -7.6079"/>
+                            </div>
+                            <div>
+                                <label for="longLieu" class="block text-gray-700 font-semibold mb-1">Longitude :</label>
+                                <h:inputText id="longLieu" value="#{lieuBean.longitude}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: 110.2038"/>
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-6">
-                        <h:commandButton value="Ajouter" action="#{lieuBean.ajouterLieu}" styleClass="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"/>
+                    <div class="mt-6 flex gap-3">
+                        <h:commandButton value="#{empty lieuBean.editingId ? 'Ajouter' : 'Enregistrer'}" action="#{lieuBean.ajouterLieu}" styleClass="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"/>
+                        <h:commandButton value="Annuler" action="#{lieuBean.annulerModification}" rendered="#{not empty lieuBean.editingId}" immediate="true" styleClass="bg-gray-300 text-gray-800 px-4 py-2 rounded"/>
                     </div>
                 </h:form>
+
+                <hr class="my-6"/>
+
+                <!-- Liste des lieux -->
+                <div>
+                    <h2 class="text-xl font-semibold mb-4">Lieux enregistrés</h2>
+                    <div class="overflow-x-auto rounded-lg shadow">
+                        <table class="min-w-full divide-y divide-blue-200">
+                            <thead class="bg-blue-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Nom</th>
+                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Description</th>
+                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Latitude</th>
+                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Longitude</th>
+                                    <th class="px-4 py-2 text-center text-xs font-bold text-blue-700 uppercase">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ui:repeat value="#{lieuBean.lieux}" var="lieu" varStatus="status">
+                                    <tr class="#{status.index % 2 == 0 ? 'bg-white' : 'bg-blue-50'} hover:bg-blue-100 transition">
+                                        <td class="px-4 py-2 font-semibold text-blue-900">#{lieu.nom}</td>
+                                        <td class="px-4 py-2 text-gray-700">
+                                            <span class="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">#{lieu.description}</span>
+                                        </td>
+                                        <td class="px-4 py-2 text-gray-700">
+                                            <span class="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-xs">#{lieu.latitude}</span>
+                                        </td>
+                                        <td class="px-4 py-2 text-gray-700">
+                                            <span class="inline-block bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">#{lieu.longitude}</span>
+                                        </td>
+                                        <td class="px-4 py-2 text-center">
+                                            <h:form style="display:inline">
+                                                <h:commandButton value="Modifier" action="#{lieuBean.preparerModification(lieu)}" styleClass="text-blue-600 underline mr-3 bg-transparent border-0 p-0"/>
+                                            </h:form>
+                                            <h:form style="display:inline">
+                                                <h:commandButton value="Supprimer" action="#{lieuBean.supprimerLieu(lieu.id)}" styleClass="bg-red-500 text-white px-2 py-1 rounded"/>
+                                            </h:form>
+                                        </td>
+                                    </tr>
+                                </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
             <footer class="mt-8 text-center text-gray-500 text-sm">
                 &copy; 2025 Indonésie Explorer. Tous droits réservés.
