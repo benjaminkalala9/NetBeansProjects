@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="jakarta.faces.core">
+<head>
+    <title>Ajouter un Utilisateur</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-indigo-500 to-purple-600 min-h-screen flex items-center justify-center">
+
+    <h:form styleClass="bg-white shadow-2xl rounded-2xl p-8 w-full max-w-md space-y-5">
+
+        <h2 class="text-2xl font-bold text-center text-gray-800">
+            Ajouter un utilisateur
+        </h2>
+
+        <!-- Username -->
+        <div>
+            <h:outputLabel for="username" value="Nom d'utilisateur"
+                           styleClass="block text-sm font-medium text-gray-700 mb-1"/>
+            <h:inputText id="username"
+                         value="#{utilisateurBean.username}"
+                         required="true"
+                         requiredMessage="Champ obligatoire"
+                         validatorMessage="Au moins 3 lettres"
+                         styleClass="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <f:validateLength minimum="3" maximum="50"/>
+            </h:inputText>
+            <h:message for="username" styleClass="text-red-500 text-sm mt-1"/>
+        </div>
+
+        <!-- Email -->
+        <div>
+            <h:outputLabel for="email" value="Email"
+                           styleClass="block text-sm font-medium text-gray-700 mb-1"/>
+            <h:inputText id="email"
+                         value="#{utilisateurBean.email}"
+                         required="true"
+                         styleClass="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+            <h:message for="email" styleClass="text-red-500 text-sm mt-1"/>
+        </div>
+
+        <!-- Password -->
+        <div>
+            <h:outputLabel for="password" value="Mot de passe"
+                           styleClass="block text-sm font-medium text-gray-700 mb-1"/>
+            <h:inputSecret id="password"
+                           value="#{utilisateurBean.password}"
+                           required="true"
+                           styleClass="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <f:validateLength minimum="8"/>
+            </h:inputSecret>
+            <h:message for="password" styleClass="text-red-500 text-sm mt-1"/>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+            <h:outputLabel for="confirmPassword" value="Confirmer le mot de passe"
+                           styleClass="block text-sm font-medium text-gray-700 mb-1"/>
+            <h:inputSecret id="confirmPassword"
+                           value="#{utilisateurBean.confirmPassword}"
+                           required="true"
+                           styleClass="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+            <h:message for="confirmPassword" styleClass="text-red-500 text-sm mt-1"/>
+        </div>
+
+        <!-- Description -->
+        <div>
+            <h:outputLabel for="description" value="Description"
+                           styleClass="block text-sm font-medium text-gray-700 mb-1"/>
+            <h:inputTextarea id="description"
+                             value="#{utilisateurBean.description}"
+                             rows="3"
+                             styleClass="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none"/>
+        </div>
+
+        <!-- Global messages -->
+        <h:messages globalOnly="true" styleClass="text-red-600 text-sm text-center"/>
+
+        <!-- Button -->
+        <div class="text-center">
+            <h:commandButton value="Ajouter"
+                             action="#{utilisateurBean.ajouterUtilisateur}"
+                             styleClass="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2 rounded-lg shadow-md transition duration-300"/>
+        </div>
+
+    </h:form>
+
+</body>
+</html>
