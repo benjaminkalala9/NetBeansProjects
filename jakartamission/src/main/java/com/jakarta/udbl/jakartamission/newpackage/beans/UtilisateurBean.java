@@ -1,10 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.jakarta.udbl.jakartamission.newpackage.beans;
 
+import com.jakarta.udbl.jakartamission.buisness.SessionManager;
 import com.jakarta.udbl.jakartamission.buisness.UtilisateurEntrepriseBean;
+import com.jakarta.udbl.jakartamission.entities.Utilisateur;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -14,6 +14,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  *
@@ -21,7 +22,7 @@ import jakarta.validation.constraints.Size;
  */
 @Named
 @RequestScoped
-public class UtilisateurBean {
+public class UtilisateurBean implements Serializable {
 
     @NotBlank(message = "Le nom d'utilisateur est obligatoire")
     @Size(min = 3, max = 50, message = "Le nom d'utilisateur doit avoir entre 3 et 50 caractères")
@@ -44,8 +45,29 @@ public class UtilisateurBean {
 
     private String description;
 
-    @Inject
+    private String currentPassword;
+    private String newPassword;
+
+    @EJB
     private UtilisateurEntrepriseBean utilisateurEntrepriseBean;
+
+    @Inject
+    private SessionManager sessionManager;
+
+    private Utilisateur currentUtilisateur;
+
+    @PostConstruct
+    public void init() {
+        String emailSession = sessionManager.getValueFromSession("user");
+        if (emailSession != null) {
+            currentUtilisateur = utilisateurEntrepriseBean.trouverUtilisateurParEmail(emailSession);
+            if (currentUtilisateur != null) {
+                this.username = currentUtilisateur.getUsername();
+                this.email = currentUtilisateur.getEmail();
+                this.description = currentUtilisateur.getDescription();
+            }
+        }
+    }
 
     public String ajouterUtilisateur() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -77,6 +99,56 @@ public class UtilisateurBean {
         return null;
     }
 
+    public String modifierProfil() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        try {
+            if (currentUtilisateur == null) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Utilisateur non connecté", null));
+                return null;
+            }
+
+            // Mettre à jour les informations de base
+            currentUtilisateur.setUsername(this.username);
+            
+            String oldEmail = currentUtilisateur.getEmail();
+            boolean emailChanged = !oldEmail.equals(this.email);
+            currentUtilisateur.setEmail(this.email);
+            
+            currentUtilisateur.setDescription(this.description);
+
+            // Gérer le changement de mot de passe si fourni
+            if (newPassword != null && !newPassword.isEmpty()) {
+                if (!newPassword.equals(confirmPassword)) {
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Les nouveaux mots de passe ne correspondent pas", null));
+                    return null;
+                }
+                utilisateurEntrepriseBean.modifierUtilisateur(currentUtilisateur, newPassword);
+            } else {
+                // Persister toutes les modifications (username, email, description)
+                utilisateurEntrepriseBean.modifierUtilisateur(currentUtilisateur, null);
+            }
+
+            // Si l'email a changé, mettre à jour la session
+            if (emailChanged) {
+                sessionManager.createSession("user", this.email);
+            }
+
+            // Réinitialiser les champs de mot de passe après succès
+            newPassword = "";
+            confirmPassword = "";
+
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Profil mis à jour avec succès", null));
+        } catch (Exception e) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur lors de la mise à jour : " + e.getMessage(), null));
+        }
+        return null;
+    }
+
+    public String deconnexion() {
+        sessionManager.invalidateSession();
+        return "/index.xhtml?faces-redirect=true";
+    }
+
     // Getters & Setters CORRECTS
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
@@ -94,4 +166,10 @@ public class UtilisateurBean {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+
+    public String getCurrentPassword() { return currentPassword; }
+    public void setCurrentPassword(String currentPassword) { this.currentPassword = currentPassword; }
+
+    public String getNewPassword() { return newPassword; }
+    public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
 }

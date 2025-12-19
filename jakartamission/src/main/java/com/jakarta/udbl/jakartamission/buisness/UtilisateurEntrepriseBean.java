@@ -58,8 +58,24 @@ public class UtilisateurEntrepriseBean {
         }
     }
     
-    // Méthode pour vérifier un mot de passe public boolean 
-   public boolean verifierMotDePasse(String password, String hashedPassword) { 
+    // Méthode pour vérifier un mot de passe
+    public boolean verifierMotDePasse(String password, String hashedPassword) { 
         return BCrypt.checkpw(password, hashedPassword); 
-   }  
+    } 
+    public Utilisateur authentifier(String email, String password){
+        Utilisateur utilisateur = this.trouverUtilisateurParEmail(email);
+        if (utilisateur != null && this.verifierMotDePasse(password, utilisateur.getPassword())){
+            return utilisateur;
+            }
+        return null;
+        
+    }
+
+    @Transactional
+    public void modifierUtilisateur(Utilisateur utilisateur, String newPassword) {
+        if (newPassword != null && !newPassword.isEmpty()) {
+            utilisateur.setPassword(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
+        }
+        em.merge(utilisateur);
+    }
 }

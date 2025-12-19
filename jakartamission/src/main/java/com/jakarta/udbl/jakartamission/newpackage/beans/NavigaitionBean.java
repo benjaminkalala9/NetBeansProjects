@@ -18,7 +18,8 @@ import java.io.IOException;
 public class NavigaitionBean {
     public void voirApropos(){
         try{
-            FacesContext.getCurrentInstance().getExternalContext().redirect("pages/a_propos.xhtml");
+            String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/pages/a_propos.xhtml");
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -26,7 +27,8 @@ public class NavigaitionBean {
 
     public void voirLieu(){
         try{
-            FacesContext.getCurrentInstance().getExternalContext().redirect("pages/lieu.xhtml");
+            String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/pages/lieu.xhtml");
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -34,7 +36,8 @@ public class NavigaitionBean {
 
     public void voirHome(){
         try{
-            FacesContext.getCurrentInstance().getExternalContext().redirect("../index.xhtml");
+            String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/index.xhtml");
         }catch (IOException e){
             e.printStackTrace();
         }
