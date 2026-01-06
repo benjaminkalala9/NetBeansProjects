@@ -8,12 +8,16 @@ package com.jakarta.udbl.jakartamission;
 import com.jakarta.udbl.jakartamission.buisness.LieuEntrepriseBean;
 import com.jakarta.udbl.jakartamission.entities.Lieu;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.event.AjaxBehaviorEvent;
 /**
  *
  * @author LENOVO
  * 
  */import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.client.ClientBuilder;
+import jakarta.ws.rs.core.MediaType;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +35,8 @@ public class LieuBean implements Serializable{
 
     @Inject
     private LieuEntrepriseBean lieuEntrepriseBean;
+    private String weatherMessage;
+    private Integer selectedLieu;
 
     public String getNom() { return nom; }
     public void setNom(String nom) { this.nom = nom; }
@@ -87,4 +93,50 @@ public class LieuBean implements Serializable{
 
     public Integer getEditingId() { return editingId; }
     public void setEditingId(Integer editingId) { this.editingId = editingId; }
+    
+    public void fetchWeatherMessage(Lieu l) {
+      
+        if (selectedLieu != null) {
+            // Appel au service web pour obtenir les données météorologiques
+        
+            String serviceURL = "http://localhost:8080/j-weather/webapi/JakartaWeather?latitude="
+                    + l.getLatitude() + "&longitude=" + l.getLongitude();
+            Client client = ClientBuilder.newClient();
+            String response = client.target(serviceURL)
+                    .request(MediaType.TEXT_PLAIN)
+                    .get(String.class);
+            // Enregistrement du message météo dans la variable weatherMessage
+          this.weatherMessage =response;
+        }
+       
+    }
+    
+    public void updateWeatherMessage(AjaxBehaviorEvent event) {
+        
+        Lieu lieu=lieuEntrepriseBean.trouverLieuParId(selectedLieu);
+        this.fetchWeatherMessage(lieu);
+    }
+ public String getWeatherMessage() {
+        return weatherMessage;
+    }
+    public void setWeatherMessage(String weatherMessage) {
+        this.weatherMessage = weatherMessage;
+    }
+
+    public Integer getSelectedLieu() {
+        return selectedLieu;
+    }
+
+    public void setSelectedLieu(Integer selectedLieu) {
+        this.selectedLieu = selectedLieu;
+    }
+
+    public String visiterLieu() {
+        if (selectedLieu != null) {
+            return "/pages/ajouter_visite?faces-redirect=true&lieuId=" + selectedLieu;
+        }
+        return null;
+    }
+    
+    
 }

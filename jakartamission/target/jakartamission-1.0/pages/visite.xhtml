@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Préparer une Visite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
+</h:head>
+<h:body class="bg-gradient-to-tr from-cyan-100 to-blue-200 min-h-screen flex items-center justify-center p-6">
+
+    <div class="relative w-full max-w-md">
+        <!-- Decorative dots -->
+        <div
+            class="absolute -top-10 -right-10 w-40 h-40 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob">
+        </div>
+        <div
+            class="absolute -bottom-10 -left-10 w-40 h-40 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000">
+        </div>
+
+        <h:form
+            styleClass="relative z-10 bg-white/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/50">
+            <div class="text-center mb-8">
+                <h1 class="text-2xl font-extrabold text-gray-800">Où allez-vous ?</h1>
+                <p class="text-gray-500 text-sm">Sélectionnez une destination pour vérifier la météo et démarrer.</p>
+            </div>
+
+            <div class="mb-8">
+                <h:selectOneMenu value="#{lieuBean.selectedLieu}"
+                    styleClass="w-full bg-white border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded-xl leading-tight focus:outline-none focus:bg-white focus:border-blue-500 shadow-sm appearance-none font-bold text-center">
+                    <f:selectItems value="#{lieuBean.lieux}" var="lieu" itemValue="#{lieu.id}"
+                        itemLabel="#{lieu.nom}" />
+                    <f:ajax listener="#{lieuBean.updateWeatherMessage}" render="weatherContainer" />
+                </h:selectOneMenu>
+            </div>
+
+            <!-- Weather Card -->
+            <h:panelGroup id="weatherContainer" layout="block" styleClass="mb-8">
+                <div
+                    class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg shadow-blue-500/30 transform transition-all duration-500 #{empty lieuBean.weatherMessage ? 'opacity-50 scale-95' : 'opacity-100 scale-100'}">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-blue-100 text-xs font-bold uppercase tracking-wider">Météo en direct</p>
+                            <h3 class="text-xl font-bold mt-1">
+                                <h:outputText value="#{lieuBean.weatherMessage}"
+                                    rendered="#{not empty lieuBean.weatherMessage}" />
+                                <h:outputText value="Sélection requise" rendered="#{empty lieuBean.weatherMessage}" />
+                            </h3>
+                        </div>
+                        <div class="text-4xl">🌤️</div>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <h:commandButton value="Commencer la visite ➜" action="#{lieuBean.visiterLieu}"
+                styleClass="w-full bg-gray-900 text-white font-bold py-4 rounded-xl shadow-xl hover:bg-black hover:scale-[1.02] active:scale-95 transition-all duration-200" />
+
+            <div class="mt-6 text-center">
+                <h:link outcome="/home" value="Retour au menu"
+                    class="text-sm text-gray-400 hover:text-gray-600 transition" />
+            </div>
+        </h:form>
+    </div>
+</h:body>
+
+</html>

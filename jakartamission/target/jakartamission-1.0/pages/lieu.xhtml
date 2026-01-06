@@ -1,102 +1,74 @@
 <?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:h="jakarta.faces.html"
-    xmlns:f="http://xmlns.jcp.org/jsf/core"
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="jakarta.faces.html" xmlns:f="jakarta.faces.core"
     xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
-    <h:head>
-        <title>Ajouter un lieu</title>
-        <!-- TailwindCSS CDN -->
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
-    </h:head>
-    <h:body>
-        <div class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-green-100 to-blue-200 p-6">
-            <div class="bg-white rounded-2xl shadow-2xl p-10 max-w-2xl w-full relative animate-fade-in">
-                <img src="https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&amp;fit=crop&amp;w=800&amp;q=80" alt="Lieu Indonésie" class="w-full h-48 object-cover rounded-xl mb-6 shadow-lg border-4 border-green-200"/>
-                <h1 class="text-3xl font-extrabold text-blue-700 mb-6 drop-shadow">Ajouter un lieu</h1>
-                <h:form>
-                    <div class="grid grid-cols-1 gap-4">
-                        <div>
-                            <label for="nomLieu" class="block text-gray-700 font-semibold mb-1">Nom :</label>
-                            <h:inputText id="nomLieu" value="#{lieuBean.nom}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: Borobudur"/>
-                        </div>
-                        <div>
-                            <label for="descLieu" class="block text-gray-700 font-semibold mb-1">Description :</label>
-                            <h:inputText id="descLieu" value="#{lieuBean.description}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: Temple bouddhiste célèbre, patrimoine mondial"/>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="latLieu" class="block text-gray-700 font-semibold mb-1">Latitude :</label>
-                                <h:inputText id="latLieu" value="#{lieuBean.latitude}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: -7.6079"/>
-                            </div>
-                            <div>
-                                <label for="longLieu" class="block text-gray-700 font-semibold mb-1">Longitude :</label>
-                                <h:inputText id="longLieu" value="#{lieuBean.longitude}" required="true" styleClass="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="ex: 110.2038"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-6 flex gap-3">
-                        <h:commandButton value="#{empty lieuBean.editingId ? 'Ajouter' : 'Enregistrer'}" action="#{lieuBean.ajouterLieu}" styleClass="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"/>
-                        <h:commandButton value="Annuler" action="#{lieuBean.annulerModification}" rendered="#{not empty lieuBean.editingId}" immediate="true" styleClass="bg-gray-300 text-gray-800 px-4 py-2 rounded"/>
-                    </div>
-                </h:form>
+<h:head>
+    <title>Gérer les Lieux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&amp;display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+    </style>
+</h:head>
+<h:body class="bg-gray-50 min-h-screen">
 
-                <hr class="my-6"/>
-
-                <!-- Liste des lieux -->
+    <div class="container mx-auto px-4 py-8">
+        <h:form>
+            <div class="flex justify-between items-center mb-8">
                 <div>
-                    <h2 class="text-xl font-semibold mb-4">Lieux enregistrés</h2>
-                    <div class="overflow-x-auto rounded-lg shadow">
-                        <table class="min-w-full divide-y divide-blue-200">
-                            <thead class="bg-blue-100">
-                                <tr>
-                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Nom</th>
-                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Description</th>
-                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Latitude</th>
-                                    <th class="px-4 py-2 text-left text-xs font-bold text-blue-700 uppercase">Longitude</th>
-                                    <th class="px-4 py-2 text-center text-xs font-bold text-blue-700 uppercase">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <ui:repeat value="#{lieuBean.lieux}" var="lieu" varStatus="status">
-                                    <tr class="#{status.index % 2 == 0 ? 'bg-white' : 'bg-blue-50'} hover:bg-blue-100 transition">
-                                        <td class="px-4 py-2 font-semibold text-blue-900">#{lieu.nom}</td>
-                                        <td class="px-4 py-2 text-gray-700">
-                                            <span class="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded text-xs">#{lieu.description}</span>
-                                        </td>
-                                        <td class="px-4 py-2 text-gray-700">
-                                            <span class="inline-block bg-green-100 text-green-700 px-2 py-1 rounded text-xs">#{lieu.latitude}</span>
-                                        </td>
-                                        <td class="px-4 py-2 text-gray-700">
-                                            <span class="inline-block bg-yellow-100 text-yellow-700 px-2 py-1 rounded text-xs">#{lieu.longitude}</span>
-                                        </td>
-                                        <td class="px-4 py-2 text-center">
-                                            <h:form style="display:inline">
-                                                <h:commandButton value="Modifier" action="#{lieuBean.preparerModification(lieu)}" styleClass="text-blue-600 underline mr-3 bg-transparent border-0 p-0"/>
-                                            </h:form>
-                                            <h:form style="display:inline">
-                                                <h:commandButton value="Supprimer" action="#{lieuBean.supprimerLieu(lieu.id)}" styleClass="bg-red-500 text-white px-2 py-1 rounded"/>
-                                            </h:form>
-                                        </td>
-                                    </tr>
-                                </ui:repeat>
-                            </tbody>
-                        </table>
-                    </div>
+                    <h1 class="text-3xl font-extrabold text-gray-900">Destinations</h1>
+                    <p class="text-gray-500">Gérez les lieux disponibles pour vos visites.</p>
+                </div>
+                <div>
+                    <h:link outcome="/home" value="Accueil"
+                        class="mr-4 text-gray-500 font-bold hover:text-gray-800 transition" />
+                    <h:commandButton value="+ Ajouter" action="/pages/ajouter_lieu?faces-redirect=true"
+                        styleClass="px-6 py-2 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 transition font-bold" />
                 </div>
             </div>
-            <footer class="mt-8 text-center text-gray-500 text-sm">
-                &copy; 2025 Indonésie Explorer. Tous droits réservés.
-            </footer>
-        </div>
-        <style>
-            @keyframes fade-in {
-                from { opacity: 0; transform: translateY(30px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
-            .animate-fade-in {
-                animation: fade-in 1s ease;
-            }
-        </style>
-    </h:body>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ui:repeat value="#{lieuBean.lieux}" var="lieu">
+                    <div
+                        class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div
+                                class="h-12 w-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl font-bold">
+                                #{lieu.nom.substring(0,1)}
+                            </div>
+                            <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <h:commandButton value="✎" action="#{lieuBean.preparerModification(lieu)}"
+                                    styleClass="text-gray-400 hover:text-blue-600 font-bold p-1" />
+                                <h:commandButton value="✕" action="#{lieuBean.supprimerLieu(lieu.id)}"
+                                    styleClass="text-gray-400 hover:text-red-600 font-bold p-1" />
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">#{lieu.nom}</h3>
+                        <p class="text-gray-500 text-sm mb-4 line-clamp-2">#{lieu.description}</p>
+
+                        <div class="flex gap-2 mb-6">
+                            <span
+                                class="px-2 py-1 bg-gray-50 rounded-md text-xs font-mono text-gray-400">#{lieu.latitude}</span>
+                            <span
+                                class="px-2 py-1 bg-gray-50 rounded-md text-xs font-mono text-gray-400">#{lieu.longitude}</span>
+                        </div>
+
+                        <h:link outcome="ajouter_visite"
+                            styleClass="block w-full text-center py-3 bg-blue-50 text-blue-600 font-bold rounded-xl hover:bg-blue-600 hover:text-white transition-colors duration-300">
+                            <f:param name="lieuId" value="#{lieu.id}" />
+                            Visiter
+                        </h:link>
+                    </div>
+                </ui:repeat>
+            </div>
+        </h:form>
+    </div>
+
+</h:body>
+
 </html>

@@ -16,29 +16,39 @@ import java.io.IOException;
 @Named(value = "navigationController")
 @RequestScoped
 public class NavigaitionBean {
-    public void voirApropos(){
-        try{
+
+    public void voirApropos() {
+        try {
             String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/pages/a_propos.xhtml");
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void voirLieu(){
-        try{
+    public void voirLieu() {
+        try {
             String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/pages/lieu.xhtml");
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void voirHome(){
-        try{
+    public void voirHome() {
+        try {
             String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
             FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/index.xhtml");
-        }catch (IOException e){
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void voirVisite() {
+        try {
+            String contextPath = FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath();
+            FacesContext.getCurrentInstance().getExternalContext().redirect(contextPath + "/pages/visite.xhtml");
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
